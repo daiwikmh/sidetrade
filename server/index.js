@@ -338,12 +338,6 @@ app.listen(PORT, () => {
 
   // Initial data fetch
   updateMarketData();
-
-  // Set up periodic updates
-  const PRICE_UPDATE_INTERVAL = parseInt(process.env.PRICE_UPDATE_INTERVAL) || 30000;
-  setInterval(updateMarketData, PRICE_UPDATE_INTERVAL);
-
-  console.log(`⏱️  Market data updates every ${PRICE_UPDATE_INTERVAL / 1000}s`);
 });
 
 // Graceful shutdown
