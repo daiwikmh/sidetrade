@@ -6,7 +6,7 @@ dotenv.config();
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 
-class sidetradeShiftBot {
+class SIDETRADEBot {
   constructor() {
     this.bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
     this.subscribers = new Map(); // Store user subscriptions
@@ -65,7 +65,7 @@ class sidetradeShiftBot {
   async handleStart(msg) {
     const chatId = msg.chat.id;
     const welcomeMessage = `
-🚀 *Welcome to sidetradeShift DApp!*
+🚀 *Welcome to SIDETRADE DApp!*
 
 Your gateway to seamless cross-chain token swaps powered by SideShift.ai
 
@@ -94,7 +94,7 @@ Get started with /help to see all commands!
   async handleHelp(msg) {
     const chatId = msg.chat.id;
     const helpMessage = `
-📖 *sidetradeShift Bot Commands*
+📖 *SIDETRADE Bot Commands*
 
 /start - Initialize the bot
 /help - Show this help message
@@ -329,7 +329,7 @@ ${!isSubscribed ? 'Use /subscribe to get updates!' : 'Use /unsubscribe to stop u
 
   // Start bot
   start() {
-    console.log('✅ sidetradeShift Telegram Bot is running...');
+    console.log('✅ SIDETRADE Telegram Bot is running...');
     console.log(`📱 Bot username: @${process.env.TELEGRAM_BOT_NAME}`);
   }
 
@@ -340,4 +340,4 @@ ${!isSubscribed ? 'Use /subscribe to get updates!' : 'Use /unsubscribe to stop u
   }
 }
 
-export default sidetradeShiftBot;
+export default SIDETRADEBot;

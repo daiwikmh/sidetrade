@@ -1,4 +1,4 @@
-# sidetradeShift DApp
+# SIDETRADE DApp
 
 A real-time cross-chain token swap monitoring application powered by SideShift.ai API with Telegram bot integration.
 
@@ -59,7 +59,7 @@ The `.env` file in the root directory contains:
 ```env
 # Telegram Bot Configuration
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-TELEGRAM_BOT_NAME=sidetradeshift_bot
+TELEGRAM_BOT_NAME=yurishift_bot
 
 # SideShift API Configuration
 SIDESHIFT_API_KEY=your_sideshift_api_key
@@ -121,7 +121,7 @@ npm start
 ### Getting Started with the Bot
 
 1. Open Telegram
-2. Search for `@sidetradeshift_bot`
+2. Search for `@yurishift_bot`
 3. Send `/start` to begin
 4. Use `/pairs` to see popular trading pairs
 5. Use `/subscribe` to get real-time updates
@@ -238,7 +238,7 @@ MIT
 
 For issues or questions:
 - Open an issue on GitHub
-- Contact via Telegram: @sidetradeshift_bot
+- Contact via Telegram: @yurishift_bot
 
 ## Acknowledgments
 

@@ -1,4 +1,4 @@
-# sidetradeShift DApp - Project Summary
+# SIDETRADE DApp - Project Summary
 
 ## Overview
 
@@ -78,7 +78,7 @@ Successfully created a full-stack Node.js application integrating SideShift.ai A
 
 ```env
 TELEGRAM_BOT_TOKEN=8302633822:AAHYDKVH2JKkdTNsmYk3CxAqGnPIaz8FdNE
-TELEGRAM_BOT_NAME=sidetradeshift_bot
+TELEGRAM_BOT_NAME=yurishift_bot
 SIDESHIFT_API_KEY=2819c53d260130d733ed080910167693
 ```
 
@@ -198,7 +198,7 @@ npm run client
 **Access:**
 - Web: http://localhost:5173
 - API: http://localhost:3001
-- Bot: https://t.me/sidetradeshift_bot
+- Bot: https://t.me/yurishift_bot
 
 ### Using Start Script
 ```bash
@@ -259,7 +259,7 @@ sidetrade/
 ## Recommended Next Steps
 
 ### Immediate
-1. Test the Telegram bot: https://t.me/sidetradeshift_bot
+1. Test the Telegram bot: https://t.me/yurishift_bot
 2. Visit the web dashboard: http://localhost:5173
 3. Try the /pairs and /quote commands
 4. Subscribe to updates with /subscribe
@@ -314,6 +314,6 @@ Just update environment variables and deploy!
 
 **Project Status:** ✅ COMPLETE AND READY TO USE
 
-**Bot URL:** https://t.me/sidetradeshift_bot
+**Bot URL:** https://t.me/yurishift_bot
 **Created:** October 5, 2025
 **Version:** 1.0.0

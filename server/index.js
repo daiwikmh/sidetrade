@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import sidetradeShiftBot from './bot/telegramBot.js';
+import SIDETRADEBot from './bot/telegramBot.js';
 import sideshiftService from './services/sideshiftService.js';
 
 dotenv.config();
@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 // Initialize Telegram Bot
-const bot = new sidetradeShiftBot();
+const bot = new SIDETRADEBot();
 bot.start();
 
 // Store latest market data
@@ -62,15 +62,21 @@ function formatMarketUpdate(pairs) {
 // API Routes
 app.get('/', (req, res) => {
   res.json({
-    name: 'sidetradeShift DApp API',
+    name: 'SIDETRADE DApp API',
     version: '1.0.0',
     status: 'running',
     endpoints: {
       health: '/api/health',
       pairs: '/api/pairs',
       coins: '/api/coins',
-      quote: '/api/quote/:from/:to',
-      subscribers: '/api/subscribers'
+      coinIcon: '/api/coins/icon/:coin?network=:network',
+      getQuote: 'GET /api/quote/:from/:to',
+      postQuote: 'POST /api/quote (with networks)',
+      subscribers: '/api/subscribers',
+      createShift: 'POST /api/shifts',
+      createFixedShift: 'POST /api/shifts/fixed',
+      createVariableShift: 'POST /api/shifts/variable',
+      getShiftStatus: '/api/shifts/:id'
     }
   });
 });
@@ -130,16 +136,69 @@ app.get('/api/coins', async (req, res) => {
   }
 });
 
-// Get quote for specific pair
+// Get coin icon
+app.get('/api/coins/icon/:coin', async (req, res) => {
+  try {
+    const { coin } = req.params;
+    const { network } = req.query;
+
+    const icon = await sideshiftService.getCoinIcon(coin.toLowerCase(), network?.toLowerCase());
+
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.send(icon);
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to fetch coin icon',
+      message: error.message
+    });
+  }
+});
+
+// Get quote for specific pair (POST for network support)
+app.post('/api/quote', async (req, res) => {
+  try {
+    const { depositCoin, settleCoin, depositNetwork, settleNetwork, depositAmount, settleAmount } = req.body;
+
+    if (!depositCoin || !settleCoin) {
+      return res.status(400).json({
+        error: 'Missing required parameters',
+        required: ['depositCoin', 'settleCoin']
+      });
+    }
+
+    const quote = await sideshiftService.getQuote(
+      depositCoin,
+      settleCoin,
+      depositNetwork,
+      settleNetwork,
+      depositAmount,
+      settleAmount
+    );
+
+    res.json({
+      data: sideshiftService.formatQuoteData(quote)
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to fetch quote',
+      message: error.message
+    });
+  }
+});
+
+// Get quote for specific pair (GET - backwards compatible, uses simple pair endpoint)
 app.get('/api/quote/:from/:to', async (req, res) => {
   try {
     const { from, to } = req.params;
-    const { amount } = req.query;
+    const { amount, depositNetwork, settleNetwork } = req.query;
 
     const quote = await sideshiftService.getQuote(
       from.toLowerCase(),
       to.toLowerCase(),
-      amount ? parseFloat(amount) : null
+      depositNetwork,
+      settleNetwork,
+      amount ? parseFloat(amount) : null,
+      null
     );
 
     res.json({
@@ -160,7 +219,47 @@ app.get('/api/subscribers', (req, res) => {
   });
 });
 
-// Create shift order (POST)
+// Create shift order (POST) - supports both fixed and variable
+app.post('/api/shifts', async (req, res) => {
+  try {
+    const { depositCoin, settleCoin, settleAddress, depositAmount, affiliateId } = req.body;
+
+    if (!depositCoin || !settleCoin || !settleAddress) {
+      return res.status(400).json({
+        error: 'Missing required parameters',
+        required: ['depositCoin', 'settleCoin', 'settleAddress']
+      });
+    }
+
+    // Create variable order if no depositAmount specified, otherwise fixed
+    let order;
+    if (depositAmount) {
+      order = await sideshiftService.createFixedOrder(
+        depositCoin,
+        settleCoin,
+        settleAddress,
+        depositAmount,
+        affiliateId
+      );
+    } else {
+      order = await sideshiftService.createVariableOrder(
+        depositCoin,
+        settleCoin,
+        settleAddress,
+        affiliateId
+      );
+    }
+
+    res.json({ data: order });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to create shift order',
+      message: error.message
+    });
+  }
+});
+
+// Create fixed shift order (POST)
 app.post('/api/shifts/fixed', async (req, res) => {
   try {
     const { depositCoin, settleCoin, settleAddress, depositAmount, affiliateId } = req.body;
@@ -189,6 +288,34 @@ app.post('/api/shifts/fixed', async (req, res) => {
   }
 });
 
+// Create variable shift order (POST)
+app.post('/api/shifts/variable', async (req, res) => {
+  try {
+    const { depositCoin, settleCoin, settleAddress, affiliateId } = req.body;
+
+    if (!depositCoin || !settleCoin || !settleAddress) {
+      return res.status(400).json({
+        error: 'Missing required parameters',
+        required: ['depositCoin', 'settleCoin', 'settleAddress']
+      });
+    }
+
+    const order = await sideshiftService.createVariableOrder(
+      depositCoin,
+      settleCoin,
+      settleAddress,
+      affiliateId
+    );
+
+    res.json({ data: order });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to create shift order',
+      message: error.message
+    });
+  }
+});
+
 // Get shift status
 app.get('/api/shifts/:id', async (req, res) => {
   try {
@@ -205,7 +332,7 @@ app.get('/api/shifts/:id', async (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 sidetradeShift API Server running on port ${PORT}`);
+  console.log(`🚀 SIDETRADE API Server running on port ${PORT}`);
   console.log(`📡 API available at http://localhost:${PORT}`);
   console.log(`🤖 Telegram Bot: @${process.env.TELEGRAM_BOT_NAME}`);
 

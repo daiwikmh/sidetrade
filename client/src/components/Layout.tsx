@@ -29,7 +29,7 @@ export default function Layout() {
                 <Repeat className="h-6 w-6 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-xl font-bold gradient-text">sidetradeShift</h1>
+                <h1 className="text-xl font-bold gradient-text">SIDETRADE</h1>
                 <p className="text-xs text-muted-foreground">Cross-Chain DApp</p>
               </div>
             </div>
@@ -44,7 +44,7 @@ export default function Layout() {
               </div>
 
               <a
-                href="https://t.me/sidetradeshift_bot"
+                href="https://t.me/yurishift_bot"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
@@ -105,7 +105,7 @@ export default function Layout() {
               </a>
               <span>•</span>
               <a
-                href="https://t.me/sidetradeshift_bot"
+                href="https://t.me/yurishift_bot"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-foreground transition-colors"

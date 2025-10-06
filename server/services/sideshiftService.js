@@ -5,6 +5,7 @@ dotenv.config();
 
 const SIDESHIFT_API_URL = process.env.SIDESHIFT_API_URL || 'https://sideshift.ai/api/v2';
 const SIDESHIFT_API_KEY = process.env.SIDESHIFT_API_KEY;
+const SIDESHIFT_AFFILIATE_ID = process.env.SIDESHIFT_AFFILIATE_ID;
 
 class SideShiftService {
   constructor() {
@@ -45,20 +46,46 @@ class SideShiftService {
   }
 
   /**
-   * Get quote for a specific pair
+   * Get quote for a specific pair using POST /quotes
    */
-  async getQuote(depositCoin, settleCoin, depositAmount = null, settleAmount = null) {
+  async getQuote(depositCoin, settleCoin, depositNetwork = null, settleNetwork = null, depositAmount = null, settleAmount = null) {
     try {
-      const params = {};
-      if (depositAmount) params.depositAmount = depositAmount;
-      if (settleAmount) params.settleAmount = settleAmount;
+      const data = {
+        depositCoin: depositCoin.toUpperCase(),
+        settleCoin: settleCoin.toUpperCase(),
+        affiliateId: SIDESHIFT_AFFILIATE_ID
+      };
 
-      const response = await this.apiClient.get(`/pair/${depositCoin}/${settleCoin}`, {
-        params
-      });
+      // Add networks if provided
+      if (depositNetwork) data.depositNetwork = depositNetwork.toLowerCase();
+      if (settleNetwork) data.settleNetwork = settleNetwork.toLowerCase();
+
+      // Add amounts if provided
+      if (depositAmount) data.depositAmount = depositAmount.toString();
+      if (settleAmount) data.settleAmount = settleAmount.toString();
+
+      const response = await this.apiClient.post('/quotes', data);
       return response.data;
     } catch (error) {
       console.error('Error fetching quote:', error.message);
+      throw error;
+    }
+  }
+
+  /**
+   * Get simple pair rate (backwards compatibility for popular pairs)
+   */
+  async getPairRate(depositCoin, settleCoin) {
+    try {
+      const depositCoinUpper = depositCoin.toUpperCase();
+      const settleCoinUpper = settleCoin.toUpperCase();
+
+      const response = await this.apiClient.get(`/pair/${depositCoinUpper}/${settleCoinUpper}`, {
+        params: { affiliateId: SIDESHIFT_AFFILIATE_ID }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching pair rate:', error.message);
       throw error;
     }
   }
@@ -76,9 +103,8 @@ class SideShiftService {
         type: 'fixed'
       };
 
-      if (affiliateId) {
-        data.affiliateId = affiliateId;
-      }
+      // Use affiliate ID from env if not provided
+      data.affiliateId = affiliateId || SIDESHIFT_AFFILIATE_ID;
 
       const response = await this.apiClient.post('/shifts/fixed', data);
       return response.data;
@@ -100,9 +126,8 @@ class SideShiftService {
         type: 'variable'
       };
 
-      if (affiliateId) {
-        data.affiliateId = affiliateId;
-      }
+      // Use affiliate ID from env if not provided
+      data.affiliateId = affiliateId || SIDESHIFT_AFFILIATE_ID;
 
       const response = await this.apiClient.post('/shifts/variable', data);
       return response.data;
@@ -139,6 +164,27 @@ class SideShiftService {
   }
 
   /**
+   * Get coin icon SVG
+   */
+  async getCoinIcon(coin, network = null) {
+    try {
+      // Format: coin-network (e.g., eth-ethereum, btc-bitcoin)
+      const coinIdentifier = network ? `${coin}-${network}` : coin;
+
+      const response = await this.apiClient.get(`/coins/icon/${coinIdentifier}`, {
+        headers: {
+          'Accept': 'image/svg+xml'
+        },
+        responseType: 'text'
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching coin icon:', error.message);
+      throw error;
+    }
+  }
+
+  /**
    * Format coin data for display
    */
   formatCoinData(coin) {
@@ -156,13 +202,18 @@ class SideShiftService {
    * Format quote data for display
    */
   formatQuoteData(quote) {
+    // Handle both /pair response and /quotes response
     return {
       pair: `${quote.depositCoin}/${quote.settleCoin}`,
       rate: quote.rate,
-      depositMin: quote.min,
-      depositMax: quote.max,
+      depositMin: quote.min || quote.depositMin,
+      depositMax: quote.max || quote.depositMax,
       depositAmount: quote.depositAmount,
-      settleAmount: quote.settleAmount
+      settleAmount: quote.settleAmount,
+      depositNetwork: quote.depositNetwork,
+      settleNetwork: quote.settleNetwork,
+      depositCoin: quote.depositCoin,
+      settleCoin: quote.settleCoin
     };
   }
 
@@ -171,20 +222,22 @@ class SideShiftService {
    */
   async getPopularPairs() {
     try {
+      // Use pairs that work without network specification (mainnet coins)
       const popularPairs = [
-        { deposit: 'usdc', settle: 'eth' },
-        { deposit: 'usdc', settle: 'sol' },
-        { deposit: 'usdc', settle: 'btc' },
-        { deposit: 'eth', settle: 'usdc' },
-        { deposit: 'eth', settle: 'btc' },
         { deposit: 'btc', settle: 'eth' },
-        { deposit: 'btc', settle: 'usdc' },
-        { deposit: 'sol', settle: 'usdc' }
+        { deposit: 'eth', settle: 'btc' },
+        { deposit: 'btc', settle: 'sol' },
+        { deposit: 'eth', settle: 'sol' },
+        { deposit: 'sol', settle: 'btc' },
+        { deposit: 'sol', settle: 'eth' },
+        { deposit: 'ltc', settle: 'btc' },
+        { deposit: 'doge', settle: 'btc' }
       ];
 
       const pairPromises = popularPairs.map(async (pair) => {
         try {
-          const quote = await this.getQuote(pair.deposit, pair.settle);
+          // Use getPairRate for popular pairs (backwards compatible)
+          const quote = await this.getPairRate(pair.deposit, pair.settle);
           return {
             ...pair,
             ...this.formatQuoteData(quote)

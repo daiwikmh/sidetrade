@@ -1,4 +1,4 @@
-# sidetradeShift DApp - Setup Guide
+# SIDETRADE DApp - Setup Guide
 
 ## Quick Start
 
@@ -20,7 +20,7 @@ cd ..
 
 Your `.env` file is already configured with:
 - Telegram Bot Token: `8302633822:AAHYDKVH2JKkdTNsmYk3CxAqGnPIaz8FdNE`
-- Bot Name: `sidetradeshift_bot`
+- Bot Name: `yurishift_bot`
 - SideShift API Key: `2819c53d260130d733ed080910167693`
 
 ### 3. Run the Application
@@ -32,11 +32,11 @@ npm start
 
 Expected output:
 ```
-✅ sidetradeShift Telegram Bot is running...
-📱 Bot username: @sidetradeshift_bot
-🚀 sidetradeShift API Server running on port 3001
+✅ SIDETRADE Telegram Bot is running...
+📱 Bot username: @yurishift_bot
+🚀 SIDETRADE API Server running on port 3001
 📡 API available at http://localhost:3001
-🤖 Telegram Bot: @sidetradeshift_bot
+🤖 Telegram Bot: @yurishift_bot
 🔄 Updating market data...
 ✅ Updated 8 pairs at [timestamp]
 ⏱️  Market data updates every 30s
@@ -57,7 +57,7 @@ VITE v5.x.x ready in xxx ms
 
 - **Web Dashboard**: http://localhost:5173
 - **API**: http://localhost:3001
-- **Telegram Bot**: https://t.me/sidetradeshift_bot
+- **Telegram Bot**: https://t.me/yurishift_bot
 
 ## Project Structure
 
@@ -106,14 +106,14 @@ sidetrade/
 ## Testing the Bot
 
 ### 1. Open Telegram
-Search for `@sidetradeshift_bot` or visit: https://t.me/sidetradeshift_bot
+Search for `@yurishift_bot` or visit: https://t.me/yurishift_bot
 
 ### 2. Start the Bot
 Send: `/start`
 
 You should see:
 ```
-🚀 Welcome to sidetradeShift DApp!
+🚀 Welcome to SIDETRADE DApp!
 
 Your gateway to seamless cross-chain token swaps powered by SideShift.ai
 
@@ -307,4 +307,4 @@ If you encounter issues:
 - [ ] Add rate alerts
 - [ ] Add multi-language support
 
-Enjoy using sidetradeShift DApp! 🚀
+Enjoy using SIDETRADE DApp! 🚀

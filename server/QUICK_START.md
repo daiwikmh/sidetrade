@@ -1,4 +1,4 @@
-# sidetradeShift DApp - Quick Start ⚡
+# SIDETRADE DApp - Quick Start ⚡
 
 ## 🚀 Start in 3 Steps
 
@@ -30,7 +30,7 @@ npm run client
 |---------|-----|
 | Web Dashboard | http://localhost:5173 |
 | API Server | http://localhost:3001 |
-| Telegram Bot | https://t.me/sidetradeshift_bot |
+| Telegram Bot | https://t.me/yurishift_bot |
 
 ## 🤖 Telegram Bot Commands
 

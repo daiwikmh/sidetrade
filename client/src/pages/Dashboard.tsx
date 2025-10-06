@@ -42,7 +42,7 @@ export default function Dashboard() {
       {/* Hero Section */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl md:text-5xl font-bold gradient-text">
-          Welcome to sidetradeShift
+          Welcome to SIDETRADE
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           Your gateway to seamless cross-chain token swaps. Monitor real-time rates and execute swaps via our Telegram DApp.
@@ -56,7 +56,7 @@ export default function Dashboard() {
             <ArrowRight className="h-4 w-4" />
           </Link>
           <a
-            href="https://t.me/sidetradeshift_bot"
+            href="https://t.me/yurishift_bot"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-secondary/80 transition-colors"

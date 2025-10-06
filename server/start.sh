@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Starting sidetradeShift DApp..."
+echo "🚀 Starting SIDETRADE DApp..."
 echo ""
 
 # Check if .env exists

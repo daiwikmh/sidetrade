@@ -28,7 +28,7 @@ export const AppLayout = ({
                 {/* Sidebar Toggle Button */}
                 <div className="sticky top-0 z-10 bg-background border-b border-border p-4 flex items-center gap-4">
                   <SidebarTrigger className="lg:flex" />
-                  <h2 className="text-lg font-semibold">sidetradeShift</h2>
+                  <h2 className="text-lg font-semibold">SIDETRADE</h2>
                 </div>
 
                 {/* Page Content */}
