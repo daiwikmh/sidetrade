@@ -7,12 +7,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "client": "cd client && npm run dev",
-    "build": "cd client && npm run build",
-    "install:all": "npm install && cd client && npm install && cd ..",
-    "test:api": "curl http://localhost:3001/api/health",
-    "deploy:backend": "echo 'See DEPLOYMENT.md for deployment instructions'",
-    "deploy:frontend": "cd client && npm run build && echo 'Deploy client/dist to your hosting provider'"
+    "build": "echo 'No build step required for Node.js backend'",
+    "test:api": "curl http://localhost:3001/api/health"
   },
   "keywords": ["telegram", "sideshift", "dapp", "crypto", "swap"],
   "author": "",

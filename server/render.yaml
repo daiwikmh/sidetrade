@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: sidetrade-api
+    runtime: node
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_BOT_NAME
+        sync: false
+      - key: SIDESHIFT_API_KEY
+        sync: false
+      - key: SIDESHIFT_API_URL
+        value: https://sideshift.ai/api/v2
+      - key: SIDESHIFT_AFFILIATE_ID
+        sync: false
+      - key: PRICE_UPDATE_INTERVAL
+        value: 300000
+    healthCheckPath: /api/health
